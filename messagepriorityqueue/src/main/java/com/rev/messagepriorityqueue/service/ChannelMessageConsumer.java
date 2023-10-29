@@ -19,19 +19,24 @@ public class ChannelMessageConsumer implements Runnable {
   
 	@Override
 	public void run() {
-		while (transferSize > 0) {
-			Message message = messageQueue.peek();
-			boolean isAdded = outQueue.offer(message);
-			System.out.println("OUTQUEUE :" + printQueueItems(outQueue));
-			if (isAdded) {
-				messageQueue.poll();
-				System.out.println("OUTQUEUE SIZE: " + outQueue.size());
-			} else {
-				System.out.println("FAILED TO QUEUE: !!!!!!!!!!!!!!" + message.toString());
-				System.out.println("OUTQUEUE SIZE: " + outQueue.size());
-			}
-			transferSize--;
+		System.out.println("---------------------------------START QUEUE MESSAGE-----------------------------------");
+        while (transferSize > 0) {
+        	if(!messageQueue.isEmpty()) {
+        		Message message = messageQueue.peek();
+    			System.out.println("Message to queue:" + message.getMessageId());
+    			boolean isAdded = outQueue.offer(message);
+    			System.out.println("OUTQUEUE :" + printQueueItems(outQueue));
+    			if (isAdded) {
+    				messageQueue.poll();
+    				System.out.println("Successfully added: " + message.getMessageId());
+    			} else {
+    				System.out.println("FAILED TO QUEUE!!!!!!!!!!!!!!" + message.getMessageId());
+    			}
+    			System.out.println("OUTQUEUE size: " + outQueue.size());
+    			transferSize--;
+        	}
 		}
+        System.out.println("---------------------------------END QUEUE MESSAGE-----------------------------------");
 	}
 	
 	public static String printQueueItems(Queue<Message> messageQueue) {
